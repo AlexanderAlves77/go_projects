@@ -9,10 +9,6 @@
 # Vendor directory (if using Go modules vendoring)
 vendor/
 
-# Go workspace files
-go.sum
-go.mod
-
 # VS Code settings
 .vscode/
 
