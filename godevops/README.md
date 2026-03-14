@@ -100,7 +100,7 @@ godevops/
 
 ## Screenshots
 ### Dashboard example:
-
+```
 FULLDEVSTACKS SYSTEM METRICS
 ────────────────────────
 CPU: █████████░░░░░░ 45.00%
@@ -118,7 +118,7 @@ PROCESS              CPU
 chrome.exe           12.50%
 code.exe             8.30%
 explorer.exe         5.60%
-
+```
 
 ## License
 
