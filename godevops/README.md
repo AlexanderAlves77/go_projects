@@ -71,7 +71,7 @@ godevops dashboard
 
 
 ## Project Structure
-
+```
 godevops/
 ├── cmd/                 # CLI commands
 │   ├── cpu.go
@@ -88,7 +88,7 @@ godevops/
 ├── go.mod
 ├── go.sum
 └── .gitignore
-
+```
 
 ## Dependencies
 
