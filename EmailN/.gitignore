@@ -1,0 +1,28 @@
+# Compiled Object files, Static and Dynamic libs (Shared Objects)
+*.o
+*.a
+*.so
+
+# Executables
+*.exe
+*.test
+*.prof
+
+# Architecture-specific extensions/prefixes
+*.[568vq]
+[568vq].out
+
+# Folders
+_obj
+_test
+
+# IDE or OS specific files (optional, can also go in a global gitignore)
+.DS_Store # macOS
+*.iml # JetBrains IDEs
+.idea/ # JetBrains IDEs
+out/ # JetBrains IDEs
+/bin/ # Common practice to put executables in a /bin directory
+/build/ # Common practice for build artifacts
+
+# Vendor directory (optional, depending on project structure and Go version)
+# .vendor
