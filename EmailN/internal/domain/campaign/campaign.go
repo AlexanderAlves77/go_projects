@@ -8,12 +8,12 @@ import (
 )
 
 const (
-	Pending  string = "Pending"
-	Canceled        = "Canceled"
-	Deleted         = "Deleted"
-	Started         = "Started"
-	Fail            = "Fail"
-	Done            = "Done"
+	Pending  = "Pending"
+	Canceled = "Canceled"
+	Deleted  = "Deleted"
+	Started  = "Started"
+	Fail     = "Fail"
+	Done     = "Done"
 )
 
 type Contact struct {
@@ -66,9 +66,12 @@ func (c *Campaign) Started() {
 func NewCampaign(name string, content string, emails []string, createdBy string) (*Campaign, error) {
 
 	contacts := make([]Contact, len(emails))
+
 	for index, email := range emails {
-		contacts[index].Email = email
-		contacts[index].ID = xid.New().String()
+		contacts[index] = Contact{
+			ID:    xid.New().String(),
+			Email: email,
+		}
 	}
 
 	campaign := &Campaign{
@@ -80,9 +83,11 @@ func NewCampaign(name string, content string, emails []string, createdBy string)
 		Status:    Pending,
 		CreatedBy: createdBy,
 	}
+
 	err := internalerrors.ValidateStruct(campaign)
-	if err == nil {
-		return campaign, nil
+	if err != nil {
+		return nil, err
 	}
-	return nil, err
+
+	return campaign, nil
 }
