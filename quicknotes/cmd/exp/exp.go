@@ -1,16 +1,19 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"os"
 )
 
 type TemplateData struct {
 	Nome string
+	Age  int
 }
 
 func main() {
-	template, err := template.New("teste").Parse("<h1>Hello, {{.Nome}}</h1>")
+	template, err := template.ParseFiles("hello.html")
+	fmt.Println(template.Name())
 	if err != nil {
 		panic(err)
 	}
