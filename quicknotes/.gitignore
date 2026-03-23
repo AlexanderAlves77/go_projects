@@ -1,0 +1,36 @@
+# Go build outputs
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Vendor directory (if using Go modules vendoring)
+vendor/
+
+# VS Code settings
+.vscode/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.swp
+*.bak
+
+# IDE or editor backup files
+*.idea/
+*.iml
+
+# Compiled binaries in project root
+godevops.exe
+
+# PowerShell scripts temporary files
+*.ps1xml
+*.psm1
