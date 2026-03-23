@@ -12,6 +12,8 @@ vendor/
 # VS Code settings
 .vscode/
 
+.env
+
 # OS generated files
 .DS_Store
 Thumbs.db
