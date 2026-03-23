@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"text/template"
 )
 
 type MyHandler struct{}
@@ -11,10 +12,13 @@ type HelloHandler struct{}
 
 func noteList(w http.ResponseWriter, r *http.Request) {
 
-	w.Header().Set("Content-Type", "text/html;charset=utf-8")
-	w.Header()["Date"] = nil
+	temp, err := template.ParseFiles("views/templates/home.html")
+	if err != nil {
+		http.Error(w, "Aconteceu um erro ao executar essa página", http.StatusInternalServerError)
+		return
+	}
 
-	fmt.Fprint(w, `<h1>Lista de anotações e lembretes</h1>`)
+	temp.Execute(w, nil)
 }
 
 func noteView(w http.ResponseWriter, r *http.Request) {
