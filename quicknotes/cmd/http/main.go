@@ -80,7 +80,9 @@ func noteCreate(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 
-	fmt.Println("Server running on port 5000")
+	config := loadConfig()
+
+	fmt.Printf("Server running on port %s", config.ServerPort)
 	mux := http.NewServeMux()
 
 	staticHandler := http.FileServer(http.Dir("views/static/"))
@@ -92,5 +94,5 @@ func main() {
 	mux.HandleFunc("/note/new", noteNew)
 	mux.HandleFunc("/note/create", noteCreate)
 
-	http.ListenAndServe(":5000", mux)
+	http.ListenAndServe(fmt.Sprintf(":%s", config.ServerPort), mux)
 }
