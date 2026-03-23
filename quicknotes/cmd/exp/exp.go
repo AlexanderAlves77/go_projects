@@ -1,28 +1,33 @@
 package main
 
 import (
-	"html/template"
+	"encoding/json"
+	"fmt"
 	"os"
 )
 
-type TemplateData struct {
-	Nome string
-	Age  int
+type Config struct {
+	Server struct {
+		Port      int
+		Host      string
+		StaticDir string
+	}
 }
 
 func main() {
-	template, err := template.ParseFiles("layout1.html", "layout2.html", "home.html", "footer.html", "header.html")
-
-	//fmt.Println(template.Name())
-	//fmt.Println(template.DefinedTemplates())
-
+	file, err := os.Open("config.json")
 	if err != nil {
 		panic(err)
 	}
 
-	//data := TemplateData{Nome: "Alexander"}
-	err = template.ExecuteTemplate(os.Stdout, "layout1.html", "2026")
+	var config Config
+	err = json.NewDecoder(file).Decode(&config)
 	if err != nil {
 		panic(err)
 	}
+
+	fmt.Printf("Dir Static: %s\n %s%d",
+		config.Server.StaticDir,
+		config.Server.Host,
+		config.Server.Port)
 }
