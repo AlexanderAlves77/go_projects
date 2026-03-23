@@ -9,28 +9,26 @@ type MyHandler struct{}
 type WorldHandler struct{}
 type HelloHandler struct{}
 
-func (WorldHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-
-	w.Write([]byte("World"))
+func noteList(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "Listagem de Notas")
 }
 
-func helloHandler(w http.ResponseWriter, r *http.Request) {
-
-	w.Write([]byte("Hello"))
+func noteView(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "Exibindo uma nota...")
 }
 
-func (MyHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-
-	fmt.Fprint(w, "Rota default")
+func noteCreate(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "Criando uma nova nota...")
 }
 
 func main() {
 
 	fmt.Println("Server running on port 5000")
-
-	m := MyHandler{}
 	mux := http.NewServeMux()
-	mux.Handle("/", m)
+
+	mux.HandleFunc("/", noteList)
+	mux.HandleFunc("/note/view", noteView)
+	mux.HandleFunc("/note/create", noteCreate)
 
 	http.ListenAndServe(":5000", mux)
 }
