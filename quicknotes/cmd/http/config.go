@@ -30,7 +30,7 @@ func (c Config) SPrint() (envs string) {
 	return
 }
 
-func (c Config) loadFromEnv() (conf string) {
+func (c Config) loadFromEnv() (conf Config) {
 
 	v := reflect.ValueOf(c)
 	t := v.Type()
@@ -39,9 +39,16 @@ func (c Config) loadFromEnv() (conf string) {
 		field := t.Field(i)
 		envTag := strings.Split(field.Tag.Get("env"), ",")
 		envName := envTag[0]
+		defaultValue := envTag[1]
 		value := os.Getenv(envName)
-		f := reflect.ValueOf(&conf).Elem().FieldByName(field.Name)
-		f.SetString(value)
+
+		if value == "" && defaultValue != "required" {
+			f := reflect.ValueOf(&conf).Elem().FieldByName(field.Name)
+			f.SetString(defaultValue)
+		} else {
+			f := reflect.ValueOf(&conf).Elem().FieldByName(field.Name)
+			f.SetString(value)
+		}
 	}
 	return
 }
@@ -73,13 +80,9 @@ func loadConfig() Config {
 	if err != nil {
 		panic(err)
 	}
-
 	config := Config{}
 	config = config.loadFromEnv()
 	config.validate()
-
-	//config.ServerPort = os.Getenv("SERVER_PORT")
-	//fmt.Println(config.SPrint())
 
 	return config
 }
