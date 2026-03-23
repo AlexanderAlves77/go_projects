@@ -18,10 +18,11 @@ func noteView(w http.ResponseWriter, r *http.Request) {
 }
 
 func noteCreate(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		w.Header().Set("Allow", "POST")
-		w.WriteHeader(405)
-		fmt.Fprint(w, "Método não permitido")
+
+	if r.Method != http.MethodPost {
+		w.Header().Set("Allow", http.MethodPost)
+
+		http.Error(w, "Método não permitido", 405)
 		return
 	}
 	fmt.Fprint(w, "Criando uma nova nota...")
