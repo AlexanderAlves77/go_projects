@@ -11,10 +11,10 @@ type HelloHandler struct{}
 
 func noteList(w http.ResponseWriter, r *http.Request) {
 
-	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Type", "text/html;charset=utf-8")
 	w.Header()["Date"] = nil
 
-	fmt.Fprint(w, `{"id": 1}`)
+	fmt.Fprint(w, `<h1>Lista de anotações e lembretes</h1>`)
 }
 
 func noteView(w http.ResponseWriter, r *http.Request) {
@@ -24,7 +24,13 @@ func noteView(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Nota não encontrada", http.StatusNotFound)
 		return
 	}
-	fmt.Fprint(w, "Exibindo uma nota"+id)
+	note := `
+		<div>
+			<h3>Está é a nota 1</h3>
+			<p>Este é o conteúdo da anotação</p>
+		</div>
+	`
+	fmt.Fprint(w, note)
 }
 
 func noteCreate(w http.ResponseWriter, r *http.Request) {
