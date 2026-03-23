@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log/slog"
 	"net/http"
+	"os"
 	"text/template"
 )
 
@@ -28,6 +30,7 @@ func noteList(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	slog.Info("Executou o handler / ")
 	temp.ExecuteTemplate(w, "base", nil)
 }
 
@@ -81,8 +84,11 @@ func noteCreate(w http.ResponseWriter, r *http.Request) {
 func main() {
 
 	config := loadConfig()
+	slog.SetDefault(newLogger(os.Stderr, config.GetLevelLog()))
 
-	fmt.Printf("Server running on port %s", config.ServerPort)
+	slog.Info(fmt.Sprintf("DB_PASSWORD: %s", config.DBPassword))
+	slog.Info(fmt.Sprintf("Server running on port %s\n", config.ServerPort))
+
 	mux := http.NewServeMux()
 
 	staticHandler := http.FileServer(http.Dir("views/static/"))
