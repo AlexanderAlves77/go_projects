@@ -5,7 +5,28 @@ import (
 	"net/http"
 )
 
+type WorldHandler struct{}
+type HelloHandler struct{}
+
+func (WorldHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+
+	w.Write([]byte("World"))
+}
+
+func (HelloHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+
+	w.Write([]byte("Hello"))
+}
+
 func main() {
+
 	fmt.Println("Server running on port 5000")
+
+	world := WorldHandler{}
+	hello := HelloHandler{}
+
+	http.Handle("/hello", hello)
+	http.Handle("/world", world)
+
 	http.ListenAndServe(":5000", nil)
 }
