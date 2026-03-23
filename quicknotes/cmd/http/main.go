@@ -12,13 +12,17 @@ type HelloHandler struct{}
 
 func noteList(w http.ResponseWriter, r *http.Request) {
 
-	temp, err := template.ParseFiles("views/templates/home.html")
+	files := []string{
+		"views/templates/base.html",
+		"views/pages/home.html",
+	}
+	temp, err := template.ParseFiles(files...)
 	if err != nil {
 		http.Error(w, "Aconteceu um erro ao executar essa página", http.StatusInternalServerError)
 		return
 	}
 
-	temp.Execute(w, nil)
+	temp.ExecuteTemplate(w, "base", nil)
 }
 
 func noteView(w http.ResponseWriter, r *http.Request) {
@@ -29,13 +33,32 @@ func noteView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	temp, err := template.ParseFiles("views/templates/noteView.html")
+	files := []string{
+		"views/templates/base.html",
+		"views/pages/noteView.html",
+	}
+	temp, err := template.ParseFiles(files...)
 	if err != nil {
 		http.Error(w, "Aconteceu um erro ao executar essa página", http.StatusInternalServerError)
 		return
 	}
 
-	temp.Execute(w, id)
+	temp.ExecuteTemplate(w, "base", nil)
+}
+
+func noteNew(w http.ResponseWriter, r *http.Request) {
+
+	files := []string{
+		"views/templates/base.html",
+		"views/pages/noteNew.html",
+	}
+	temp, err := template.ParseFiles(files...)
+	if err != nil {
+		http.Error(w, "Aconteceu um erro ao executar essa página", http.StatusInternalServerError)
+		return
+	}
+
+	temp.ExecuteTemplate(w, "base", nil)
 }
 
 func noteCreate(w http.ResponseWriter, r *http.Request) {
@@ -56,6 +79,7 @@ func main() {
 
 	mux.HandleFunc("/", noteList)
 	mux.HandleFunc("/note/view", noteView)
+	mux.HandleFunc("/note/new", noteNew)
 	mux.HandleFunc("/note/create", noteCreate)
 
 	http.ListenAndServe(":5000", mux)
