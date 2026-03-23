@@ -13,7 +13,7 @@ func (WorldHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("World"))
 }
 
-func (HelloHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func helloHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Write([]byte("Hello"))
 }
@@ -22,11 +22,7 @@ func main() {
 
 	fmt.Println("Server running on port 5000")
 
-	world := WorldHandler{}
-	hello := HelloHandler{}
-
-	http.Handle("/hello", hello)
-	http.Handle("/world", world)
+	http.HandleFunc("/hello", helloHandler)
 
 	http.ListenAndServe(":5000", nil)
 }
