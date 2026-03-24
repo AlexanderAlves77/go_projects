@@ -17,6 +17,7 @@ type Config struct {
 }
 
 func (c Config) GetLevelLog() slog.Level {
+
 	switch strings.ToLower(c.LevelLog) {
 	case "debug":
 		return slog.LevelDebug
