@@ -14,9 +14,7 @@ func main() {
 	config := loadConfig()
 	slog.SetDefault(newLogger(os.Stderr, config.GetLevelLog()))
 
-	slog.Info(fmt.Sprintf("DB_PASSWORD: %s", config.DBPassword))
 	slog.Info(fmt.Sprintf("Server running on port %s\n", config.ServerPort))
-
 	mux := http.NewServeMux()
 
 	staticHandler := http.FileServer(http.Dir("views/static/"))
@@ -26,9 +24,11 @@ func main() {
 	noteHandler := handlers.NewNoteHandler()
 
 	mux.HandleFunc("/", noteHandler.NoteList)
-	mux.HandleFunc("/note/view", noteHandler.NoteView)
+	mux.Handle("/note/view", handlers.HandlerWithError(noteHandler.NoteView))
 	mux.HandleFunc("/note/new", noteHandler.NoteNew)
 	mux.HandleFunc("/note/create", noteHandler.NoteCreate)
 
-	http.ListenAndServe(fmt.Sprintf(":%s", config.ServerPort), mux)
+	if err := http.ListenAndServe(fmt.Sprintf(":%s", config.ServerPort), mux); err != nil {
+		panic(err)
+	}
 }

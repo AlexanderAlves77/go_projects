@@ -1,10 +1,12 @@
 package handlers
 
 import (
+	"errors"
 	"fmt"
 	"html/template"
 	"log/slog"
 	"net/http"
+	"quicknotes/internal/apperror"
 )
 
 type noteHandler struct{}
@@ -35,12 +37,17 @@ func (nh *noteHandler) NoteList(w http.ResponseWriter, r *http.Request) {
 	temp.ExecuteTemplate(w, "base", nil)
 }
 
-func (nh *noteHandler) NoteView(w http.ResponseWriter, r *http.Request) {
+func (nh *noteHandler) NoteView(w http.ResponseWriter, r *http.Request) error {
 
 	id := r.URL.Query().Get("id")
 	if id == "" {
-		http.Error(w, "Nota não encontrada", http.StatusNotFound)
-		return
+		return apperror.WithStatus(errors.New("anotação é obrigatória"),
+			http.StatusBadRequest)
+	}
+
+	if id == "0" {
+		//return handlers.ErrNotFound
+		return apperror.WithStatus(errors.New("anotação 0 não foi encontrada"), http.StatusNotFound)
 	}
 
 	files := []string{
@@ -48,12 +55,12 @@ func (nh *noteHandler) NoteView(w http.ResponseWriter, r *http.Request) {
 		"views/pages/noteView.html",
 	}
 	temp, err := template.ParseFiles(files...)
+
 	if err != nil {
-		http.Error(w, "Aconteceu um erro ao executar essa página", http.StatusInternalServerError)
-		return
+		return errors.New("aconteceu um erro ao executar essa página")
 	}
 
-	temp.ExecuteTemplate(w, "base", id)
+	return temp.ExecuteTemplate(w, "base", id)
 }
 
 func (nh *noteHandler) NoteNew(w http.ResponseWriter, r *http.Request) {
