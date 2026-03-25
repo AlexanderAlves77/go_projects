@@ -1,4 +1,7 @@
-POSTGRESQL_URL = $(shell echo %DB_CONN_URL%)
+include .env
+export
+
+POSTGRESQL_URL := $(DB_CONN_URL)
 
 server:
 	@go run ./cmd/http/.
@@ -10,9 +13,10 @@ db:
 	@docker compose up -d	
 
 migrate-up:
-	@migrate -database ${POSTGRESQL_URL} -path db/migrations up
+	@echo "Running migrations..."
+	@migrate -database "$(POSTGRESQL_URL)?sslmode=disable" -path db/migrations up
 
 migrate-down:
-	@migrate -database ${POSTGRESQL_URL} -path db/migrations down
+	@migrate -database "$(POSTGRESQL_URL)?sslmode=disable" -path db/migrations down
 
-.PHONY: server exp migrate-up migrate-down	
+.PHONY: server exp migrate-up migrate-down
