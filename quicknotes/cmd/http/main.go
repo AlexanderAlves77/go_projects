@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"quicknotes/internal/handlers"
+	"quicknotes/internal/repositories"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -32,6 +33,14 @@ func main() {
 	staticHandler := http.FileServer(http.Dir("views/static/"))
 
 	mux.Handle("/static/", http.StripPrefix("/static/", staticHandler))
+
+	noteRepo := repositories.NewNoteRepository(dbpool)
+	notes, err := noteRepo.List()
+	if err != nil {
+		slog.Error(err.Error())
+		os.Exit(1)
+	}
+	fmt.Println(notes)
 
 	noteHandler := handlers.NewNoteHandler()
 
