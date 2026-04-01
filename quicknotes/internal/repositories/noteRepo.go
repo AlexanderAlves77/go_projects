@@ -33,7 +33,7 @@ func (nr *noteRepository) List() ([]models.Note, error) {
 
 	rows, err := nr.db.Query(context.Background(), query)
 	if err != nil {
-		return list, nil
+		return list, newRepositoryError(err)
 	}
 	defer rows.Close()
 
@@ -42,7 +42,7 @@ func (nr *noteRepository) List() ([]models.Note, error) {
 		err = rows.Scan(&note.Id, &note.Title, &note.Content, &note.Author,
 			&note.CreatedAt, &note.UpdatedAt)
 		if err != nil {
-			return list, nil
+			return list, newRepositoryError(err)
 		}
 		list = append(list, note)
 	}
@@ -58,7 +58,7 @@ func (nr *noteRepository) GetById(id int) (*models.Note, error) {
 
 	if err := row.Scan(&note.Id, &note.Title, &note.Content, &note.Author,
 		&note.CreatedAt, &note.UpdatedAt); err != nil {
-		return &note, err
+		return &note, newRepositoryError(err)
 	}
 
 	return &note, nil
@@ -77,7 +77,7 @@ func (nr *noteRepository) Create(title, content, author string) (*models.Note, e
 		note.Content, note.Author)
 
 	if err := row.Scan(&note.Id, &note.CreatedAt); err != nil {
-		return &note, err
+		return &note, newRepositoryError(err)
 	}
 
 	return &note, nil
@@ -105,7 +105,7 @@ func (nr *noteRepository) Update(id int, title, content, author string) (*models
 		note.Author, note.UpdatedAt, note.Id)
 
 	if err != nil {
-		return &note, err
+		return &note, newRepositoryError(err)
 	}
 
 	return &note, nil
@@ -115,9 +115,8 @@ func (nr *noteRepository) Delete(id int) error {
 
 	query := `DELETE FROM notes WHERE id = $1`
 	_, err := nr.db.Exec(context.Background(), query, id)
-
 	if err != nil {
-		return err
+		return newRepositoryError(err)
 	}
 	return nil
 }
