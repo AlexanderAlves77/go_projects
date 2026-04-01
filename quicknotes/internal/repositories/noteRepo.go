@@ -15,6 +15,7 @@ type NoteRepository interface {
 	GetById(id int) (*models.Note, error)
 	Create(title, content, author string) (*models.Note, error)
 	Update(id int, title, content, author string) (*models.Note, error)
+	Delete(id int) error
 }
 
 type noteRepository struct {
@@ -108,4 +109,15 @@ func (nr *noteRepository) Update(id int, title, content, author string) (*models
 	}
 
 	return &note, nil
+}
+
+func (nr *noteRepository) Delete(id int) error {
+
+	query := `DELETE FROM notes WHERE id = $1`
+	_, err := nr.db.Exec(context.Background(), query, id)
+
+	if err != nil {
+		return err
+	}
+	return nil
 }
