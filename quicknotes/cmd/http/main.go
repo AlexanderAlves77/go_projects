@@ -36,7 +36,12 @@ func main() {
 
 	noteRepo := repositories.NewNoteRepository(dbpool)
 
-	note, err := noteRepo.GetById(1)
+	//note, err := noteRepo.GetById(1)
+	note, err := noteRepo.Create(
+		"Nota criada no main",
+		"Esta é o conteúdo da nota criada no main do Go",
+		"Alexander Alves",
+	)
 	if err != nil {
 		slog.Error(err.Error())
 		os.Exit(1)
