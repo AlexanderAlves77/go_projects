@@ -35,12 +35,13 @@ func main() {
 	mux.Handle("/static/", http.StripPrefix("/static/", staticHandler))
 
 	noteRepo := repositories.NewNoteRepository(dbpool)
-	notes, err := noteRepo.List()
+
+	note, err := noteRepo.GetById(1)
 	if err != nil {
 		slog.Error(err.Error())
 		os.Exit(1)
 	}
-	fmt.Println(notes)
+	fmt.Println(note)
 
 	noteHandler := handlers.NewNoteHandler()
 

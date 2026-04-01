@@ -9,6 +9,7 @@ import (
 
 type NoteRepository interface {
 	List() ([]models.Note, error)
+	GetById(id int) (*models.Note, error)
 }
 
 type noteRepository struct {
@@ -32,7 +33,7 @@ func (nr *noteRepository) List() ([]models.Note, error) {
 
 	for rows.Next() {
 		var note models.Note
-		err = rows.Scan(&note.Id, &note.Title, &note.Content, &note.Author, &note.CreatedAt, &note.UpdateddAt)
+		err = rows.Scan(&note.Id, &note.Title, &note.Content, &note.Author, &note.CreatedAt, &note.UpdatedAt)
 		if err != nil {
 			return list, nil
 		}
@@ -40,4 +41,17 @@ func (nr *noteRepository) List() ([]models.Note, error) {
 	}
 
 	return list, nil
+}
+
+func (nr *noteRepository) GetById(id int) (*models.Note, error) {
+
+	var note models.Note
+	query := `SELECT * FROM quicknotes WHERE id = $1`
+	row := nr.db.QueryRow(context.Background(), query, id)
+
+	if err := row.Scan(&note.Id, &note.Title, &note.Content, &note.Author, &note.CreatedAt, &note.UpdatedAt); err != nil {
+		return &note, err
+	}
+
+	return &note, nil
 }
